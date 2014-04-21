@@ -268,7 +268,12 @@ static jint nativeLockCanvas(JNIEnv* env, jclass clazz,
     swapCanvasPtr(env, canvasObj, nativeCanvas);
 
     if (dirtyRectPtr) {
-        nativeCanvas->clipRect( SkRect::Make(reinterpret_cast<const SkIRect&>(dirtyRect)) );
+        //nativeCanvas->clipRect( SkRect::Make(reinterpret_cast<const SkIRect&>(dirtyRect)) );
+	union {
+		const SkIRect* inframe;
+	};
+	inframe = reinterpret_cast<SkIRect*>(&dirtyRect);
+	nativeCanvas->clipRect( SkRect::Make(*inframe) );
     }
 
     if (dirtyRectObj) {
